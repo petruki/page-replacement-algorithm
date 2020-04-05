@@ -1,0 +1,19 @@
+<div *ngIf="fifoCapacity" id="result-fifo" class="result-form">
+    <div class="title">
+      <h1 style="margin: auto;">FIFO</h1>
+    </div>
+    <div>
+      <mat-grid-list cols="{{ fifoColumns }}" rowHeight="60px" gutterSize="5px">
+        <mat-grid-tile
+            *ngFor="let tile of fifo; let i = index"
+            [colspan]="tile.cols"
+            [rowspan]="tile.rows"
+            [style.background]="tile.color"
+            [style.border]="tile.border">
+            {{ i >= fifoColumns ? tile.text : ' '}}
+        <mat-grid-tile-header *ngIf="i  < fifoColumns">{{tile.text}}</mat-grid-tile-header>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+    <h1 [textContent]="'Queue: ' + fifoQueue"></h1>
+</div>
