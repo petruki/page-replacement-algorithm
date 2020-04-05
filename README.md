@@ -4,6 +4,8 @@
 # About  
 **Page Replacement Algorithm** is a Web GUI written in Typescript using Angular 9 and Materials, which ilustrate different types of Page Replacement Algorithms
 
+![Page Replacement Algorithms](https://raw.githubusercontent.com/petruki/page-replacement-algorithm/master/src/assets/sample.jpg)
+
 # About the author
 Switcher API Founder and Maintainer, Full Stack Developer - although Front-end dev is definitely not my cup of tea - and musician in my spare time.
 
