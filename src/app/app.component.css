@@ -84,16 +84,26 @@
 
 @media screen and (max-width: 1000px) {
   .input-stream-form {
-    width: 50%;
+    width: 60%;
+  }
+
+  .section.input {
+    display: block;
   }
 }
 
 @media screen and (max-width: 680px) {
-  .section.input {
+  .input-algorithm-form {
     display: block;
   }
 
-  .input-algorithm-form {
-    display: block;
+  .mat-grid-tile .mat-grid-tile-header {
+    position: static;
+    overflow: initial;
+    height: 100%;
+  }
+
+  #btnExecute {
+    float: right;
   }
 }

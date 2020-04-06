@@ -33,7 +33,7 @@
       <mat-hint>Add values separated by spaces</mat-hint>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" style="padding: 5px; margin: inherit;" 
+    <button id="btnExecute" mat-raised-button color="primary" style="padding: 5px; margin: inherit;" 
       (click)="onExecute(stream.value, capacity.value, speed.value, algorithm.value)" [disabled]="executing">Execute</button>
   </section>
 
@@ -49,7 +49,7 @@
     </mat-radio-group>    
   </section>
 
-  <section class="section results">
+  <section id="resultPanel" class="section results">
     <mat-error *ngIf="error">{{ error }}</mat-error>
     <div class="title">
       <h1 style="margin: auto;">Results</h1>
