@@ -33,6 +33,8 @@ export class AppComponent implements OnInit {
 
   executing: boolean = false;
   error: string = '';
+  algorithmNum: number;
+  paused: boolean = false;
 
   constructor() {}
 
@@ -66,22 +68,34 @@ export class AppComponent implements OnInit {
       this.clockComponent.capacity = undefined;
       this.optComponent.capacity = undefined;
 
-      const algorithmNum = Number(algorithm);
-      if (algorithmNum === 1)
+      this.algorithmNum = Number(algorithm);
+      if (this.algorithmNum === 1)
         this.fifoComponent.execute(stream, capacity, speed, this);
-      else if (algorithmNum === 2)
+      else if (this.algorithmNum === 2)
         this.lruComponent.execute(stream, capacity, speed, this);
-      else if (algorithmNum === 3)
+      else if (this.algorithmNum === 3)
         this.clockComponent.execute(stream, capacity, speed, this);
-      else if (algorithmNum === 4)
+      else if (this.algorithmNum === 4)
         this.optComponent.execute(stream, capacity, speed, this);
     } catch (e) {
       this.error = e.message;
     }
   }
 
-  public onChangeAlgorithm(event) {
+  public onControl() {
+    if (!this.paused)
+      this.paused = true;
+    else
+      this.paused = false;
 
+    if (this.algorithmNum === 1)
+      this.fifoComponent.toggle();
+    else if (this.algorithmNum === 2)
+      this.lruComponent.toggle();
+    else if (this.algorithmNum === 3)
+      this.clockComponent.toggle();
+    else if (this.algorithmNum === 4)
+      this.optComponent.toggle();
   }
 
 }
