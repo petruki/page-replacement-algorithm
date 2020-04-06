@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FifoComponent } from './fifo/fifo.component';
 import { LruComponent } from './lru/lru.component';
 import { ClockComponent } from './clock/clock.component';
+import { OptComponent } from './opt/opt.component';
 
 export interface Tile {
   color: string;
@@ -26,6 +27,9 @@ export class AppComponent implements OnInit {
 
   @ViewChild('clockComponent', { static: true })
   private clockComponent: ClockComponent;
+
+  @ViewChild('optComponent', { static: true })
+  private optComponent: OptComponent;
 
   executing: boolean = false;
   error: string = '';
@@ -68,6 +72,8 @@ export class AppComponent implements OnInit {
         this.lruComponent.execute(stream, capacity, speed);
       else if (algorithmNum === 3)
         this.clockComponent.execute(stream, capacity, speed);
+      else if (algorithmNum === 4)
+        this.optComponent.execute(stream, capacity, speed, this);
     } catch (e) {
       this.error = e.message;
     }

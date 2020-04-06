@@ -43,13 +43,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { FifoComponent } from './fifo/fifo.component';
 import { LruComponent } from './lru/lru.component';
 import { ClockComponent } from './clock/clock.component';
+import { OptComponent } from './opt/opt.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FifoComponent,
     LruComponent,
-    ClockComponent
+    ClockComponent,
+    OptComponent
   ],
   imports: [
     BrowserModule,

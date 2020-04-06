@@ -6,9 +6,6 @@
 
 ![Page Replacement Algorithms](https://raw.githubusercontent.com/petruki/page-replacement-algorithm/master/src/assets/sample.jpg)
 
-# About the author
-Switcher API Founder and Maintainer, Full Stack Developer - although Front-end dev is definitely not my cup of tea - and musician in my spare time.
-
 # Demo environment
 https://petruki.github.io/page-replacement-algorithm/
 
