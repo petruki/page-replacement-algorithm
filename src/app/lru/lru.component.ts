@@ -39,7 +39,7 @@ export class LruComponent extends PageAlgorithm implements OnInit {
           if (this.tiles[numEntries * cap + next].text === value) {
             await this.delay(this.delayTime);
             this.lruQueue.push(value); // Add to the end
-            this.lruQueue.splice(0, 1); // Remove from queue
+            this.lruQueue.splice(this.lruQueue.indexOf(value), 1); // Remove from queue
             if (next + 1 < numEntries) {
               this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
             }
