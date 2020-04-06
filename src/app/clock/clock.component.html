@@ -1,0 +1,18 @@
+<div *ngIf="clockCapacity" id="result-fifo" class="result-form">
+    <div class="title">
+      <h1 style="margin: auto;">Clock</h1>
+    </div>
+    <div>
+      <mat-grid-list cols="{{ clockColumns }}" rowHeight="60px" gutterSize="5px">
+        <mat-grid-tile
+            *ngFor="let tile of clock; let i = index"
+            [colspan]="tile.cols"
+            [rowspan]="tile.rows"
+            [style.background]="tile.color"
+            [style.border]="tile.border">
+            {{ i >= clockColumns ? tile.text : ' '}}
+        <mat-grid-tile-header *ngIf="i  < clockColumns">{{tile.text}}</mat-grid-tile-header>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+</div>

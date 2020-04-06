@@ -1,12 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Tile, AppComponent } from '../app.component';
+import { AppComponent, Tile } from '../app.component';
 
 @Component({
-  selector: 'app-fifo',
-  templateUrl: './fifo.component.html',
+  selector: 'app-lru',
+  templateUrl: './lru.component.html',
   styleUrls: ['../app.component.css']
 })
-export class FifoComponent implements OnInit {
+export class LruComponent implements OnInit {
 
   @Input()
   private app: AppComponent;
@@ -20,10 +20,10 @@ export class FifoComponent implements OnInit {
   private READING: string = '2px solid #ff000091';
   private NOT_READING: string = '0px';
 
-  fifoColumns: number;
-  fifoCapacity: number;
-  fifo: Tile[];
-  fifoQueue: any[] = [];
+  lruColumns: number;
+  lruCapacity: number;
+  lru: Tile[];
+  lruQueue: any[] = [];
 
   delayTime: number = 500;
 
@@ -33,60 +33,62 @@ export class FifoComponent implements OnInit {
   }
 
   public execute(stream: string, capacity: string, speed: any): void {
-    this.fifoCapacity = Number(capacity);
+    this.lruCapacity = Number(capacity);
     this.delayTime = Number(speed);
     this.app.executing = true;
-    this.loadFifo(stream, capacity);
+    this.loadLru(stream, capacity);
   }
 
-  private async loadFifo(stream: string, capacity: string) {
-    this.fifo = [];
+  private async loadLru(stream: string, capacity: string) {
+    this.lru = [];
 
     const entry = stream.split(' ');
-    this.fifoColumns = entry.length;
-    this.fifoCapacity = Number(capacity);
+    this.lruColumns = entry.length;
+    this.lruCapacity = Number(capacity);
 
-    this.prepareFifoFrames(entry, Number(capacity));
-    await this.exeuteFifo(entry, Number(capacity));
+    this.prepareLruFrames(entry, Number(capacity));
+    await this.exeuteLru(entry, Number(capacity));
     this.app.executing = false;
   }
 
-  private prepareFifoFrames(entry: string[], capacity: number): void {
+  private prepareLruFrames(entry: string[], capacity: number): void {
     const totalPositions = entry.length * capacity + (entry.length * 2);
 
     for (let index = 0; index < totalPositions; index++) {
       if (index < entry.length) { // Draw header
-        this.fifo.push({ text: entry[index], cols: 1, rows: 1, color: this.ALLOC_FRAME, border: this.NOT_READING });
+        this.lru.push({ text: entry[index], cols: 1, rows: 1, color: this.ALLOC_FRAME, border: this.NOT_READING });
       } else if (index > totalPositions - entry.length) { // Draw fault footer
-        this.fifo.push({ text: ' ', cols: 1, rows: 1, color: this.NOT_ALLOC_FRAME, border: this.NOT_READING });
+        this.lru.push({ text: ' ', cols: 1, rows: 1, color: this.NOT_ALLOC_FRAME, border: this.NOT_READING });
       } else { // Draw empty frame
-        this.fifo.push({ text: ' ', cols: 1, rows: 1, color: this.NOT_ALLOC_FRAME, border: this.NOT_READING });
+        this.lru.push({ text: ' ', cols: 1, rows: 1, color: this.NOT_ALLOC_FRAME, border: this.NOT_READING });
       }
     }
   }
 
-  private async exeuteFifo(entry: string[], capacity: number) {
+  private async exeuteLru(entry: string[], capacity: number) {
     const numEntries = entry.length;
 
     let next = 0, fault = 0;
-    this.fifoQueue = []
+    this.lruQueue = []
     for (let index = 0; index < entry.length; index++) {
       const value = entry[index];
       
       for (let cap = 1; cap <= capacity; cap++) {
 
-        this.cursor(this.fifo[numEntries * cap + next]); await this.delay(this.delayTime);
+        this.cursor(this.lru[numEntries * cap + next]); await this.delay(this.delayTime);
 
-        if (this.isEmpty(this.fifo[numEntries * cap + next])) {
-          this.fifoQueue.push(value); // Store FI element
+        if (this.isEmpty(this.lru[numEntries * cap + next])) {
+          this.lruQueue.push(value); // Store FI element
 
-          this.fulfillFrame(this.fifo[numEntries * cap + next], value); await this.delay(this.delayTime);
+          this.fulfillFrame(this.lru[numEntries * cap + next], value); await this.delay(this.delayTime);
           this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
           next++;
           break;
         } else {
-          if (this.fifo[numEntries * cap + next].text === value) {
+          if (this.lru[numEntries * cap + next].text === value) {
             await this.delay(this.delayTime);
+            this.lruQueue.push(value); // Add to the end
+            this.lruQueue.splice(0, 1); // Remove from queue
             if (next + 1 < numEntries) {
               this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
             }
@@ -95,7 +97,7 @@ export class FifoComponent implements OnInit {
           }
         }
 
-        this.cursor(this.fifo[numEntries * cap + next]);
+        this.cursor(this.lru[numEntries * cap + next]);
       }
 
       if (next != fault) fault = next;
@@ -116,26 +118,26 @@ export class FifoComponent implements OnInit {
 
   private async fulfillFault(fault: number, numEntries: number, capacity: number, value: any) {
     for (let cap = 1; cap <= capacity; cap++) {
-      this.cursor(this.fifo[numEntries * cap + fault]); await this.delay(this.delayTime);
-      if (this.fifo[numEntries * cap + fault].text === this.fifoQueue[0]) {
-        this.fifo[numEntries * cap + fault].text = value; // replace
-        this.fifoQueue.splice(0, 1); // Remove from queue
-        this.fifoQueue.push(value); // Add to queue
+      this.cursor(this.lru[numEntries * cap + fault]); await this.delay(this.delayTime);
+      if (this.lru[numEntries * cap + fault].text === this.lruQueue[0]) {
+        this.lru[numEntries * cap + fault].text = value; // replace
+        this.lruQueue.splice(0, 1); // Remove from queue
+        this.lruQueue.push(value); // Add to queue
 
         // Add Fault frame
-        this.fifo[numEntries * (capacity + 1) + fault].text = 'F';
-        this.fifo[numEntries * (capacity + 1) + fault].color = this.FAULT;
+        this.lru[numEntries * (capacity + 1) + fault].text = 'F';
+        this.lru[numEntries * (capacity + 1) + fault].color = this.FAULT;
         break;
       } else {
-        this.cursor(this.fifo[numEntries * cap + fault]);
+        this.cursor(this.lru[numEntries * cap + fault]);
       }
     }
   }
 
   private prepareNextBlock(numEntries: number, capacity: number, next: number): void {
     for (let cap = 1; cap <= capacity; cap++) {
-      this.fulfillFrame(this.fifo[numEntries * cap + next + 1], // Next frame block
-        this.fifo[numEntries * cap + next].text); // Copy previous frame block
+      this.fulfillFrame(this.lru[numEntries * cap + next + 1], // Next frame block
+        this.lru[numEntries * cap + next].text); // Copy previous frame block
     }
   }
 
@@ -162,5 +164,4 @@ export class FifoComponent implements OnInit {
   private delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
   }
-
 }

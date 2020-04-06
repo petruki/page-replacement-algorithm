@@ -41,11 +41,15 @@ import { MatTreeModule } from '@angular/material/tree';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { FifoComponent } from './fifo/fifo.component';
+import { LruComponent } from './lru/lru.component';
+import { ClockComponent } from './clock/clock.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FifoComponent
+    FifoComponent,
+    LruComponent,
+    ClockComponent
   ],
   imports: [
     BrowserModule,

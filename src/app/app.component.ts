@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FifoComponent } from './fifo/fifo.component';
+import { LruComponent } from './lru/lru.component';
+import { ClockComponent } from './clock/clock.component';
 
 export interface Tile {
   color: string;
@@ -18,6 +20,12 @@ export class AppComponent implements OnInit {
 
   @ViewChild('fifoComponent', { static: true })
   private fifoComponent: FifoComponent;
+
+  @ViewChild('lruComponent', { static: true })
+  private lruComponent: LruComponent;
+
+  @ViewChild('clockComponent', { static: true })
+  private clockComponent: ClockComponent;
 
   executing: boolean = false;
   error: string = '';
@@ -49,8 +57,17 @@ export class AppComponent implements OnInit {
       this.error = '';
       this.validate(stream, capacity, algorithm);
 
-      if (Number(algorithm) === 1)
+      this.fifoComponent.fifoCapacity = undefined;
+      this.lruComponent.lruCapacity = undefined;
+      this.clockComponent.clockCapacity = undefined;
+
+      const algorithmNum = Number(algorithm);
+      if (algorithmNum === 1)
         this.fifoComponent.execute(stream, capacity, speed);
+      else if (algorithmNum === 2)
+        this.lruComponent.execute(stream, capacity, speed);
+      else if (algorithmNum === 3)
+        this.clockComponent.execute(stream, capacity, speed);
     } catch (e) {
       this.error = e.message;
     }

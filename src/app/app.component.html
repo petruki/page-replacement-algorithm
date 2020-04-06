@@ -22,7 +22,7 @@
         <option value="0">Fast</option>
         <option value="100">Normal</option>
         <option value="500">Slow</option>
-        <option value="1000">Lazy</option>
+        <option value="2000">Lazy</option>
       </select>
     </mat-form-field>
 
@@ -44,8 +44,8 @@
     <mat-radio-group ngModel #algorithm="ngModel" class="input-algorithm-form" required aria-label="Select an algorithm" (change)="onChangeAlgorithm($event)">
       <mat-radio-button value="1" color="warn">FIFO</mat-radio-button>
       <mat-radio-button value="2" color="warn">LRU</mat-radio-button>
-      <mat-radio-button value="2" color="warn">Clock</mat-radio-button>
-      <mat-radio-button value="2" color="warn">Opt</mat-radio-button>
+      <mat-radio-button value="3" color="warn">Clock</mat-radio-button>
+      <mat-radio-button value="4" color="warn">Opt</mat-radio-button>
     </mat-radio-group>    
   </section>
 
@@ -56,6 +56,8 @@
     </div>
 
     <app-fifo #fifoComponent [app]="this"></app-fifo>
+    <app-lru #lruComponent [app]="this"></app-lru>
+    <app-clock #clockComponent [app]="this"></app-clock>
   </section>
 
 </div>
