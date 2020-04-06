@@ -26,17 +26,17 @@ export class LruComponent extends PageAlgorithm implements OnInit {
       
       for (let cap = 1; cap <= capacity; cap++) {
 
-        this.cursor(this.tile[numEntries * cap + next]); await this.delay(this.delayTime);
+        this.cursor(this.tiles[numEntries * cap + next]); await this.delay(this.delayTime);
 
-        if (this.isEmpty(this.tile[numEntries * cap + next])) {
+        if (this.isEmpty(this.tiles[numEntries * cap + next])) {
           this.lruQueue.push(value); // Store FI element
 
-          this.fulfillFrame(this.tile[numEntries * cap + next], value); await this.delay(this.delayTime);
+          this.fulfillFrame(this.tiles[numEntries * cap + next], value); await this.delay(this.delayTime);
           this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
           next++;
           break;
         } else {
-          if (this.tile[numEntries * cap + next].text === value) {
+          if (this.tiles[numEntries * cap + next].text === value) {
             await this.delay(this.delayTime);
             this.lruQueue.push(value); // Add to the end
             this.lruQueue.splice(0, 1); // Remove from queue
@@ -48,7 +48,7 @@ export class LruComponent extends PageAlgorithm implements OnInit {
           }
         }
 
-        this.cursor(this.tile[numEntries * cap + next]);
+        this.cursor(this.tiles[numEntries * cap + next]);
       }
 
       if (next != fault) fault = next;
@@ -62,18 +62,18 @@ export class LruComponent extends PageAlgorithm implements OnInit {
 
   protected async fulfillFault(fault: number, numEntries: number, capacity: number, value: any) {
     for (let cap = 1; cap <= capacity; cap++) {
-      this.cursor(this.tile[numEntries * cap + fault]); await this.delay(this.delayTime);
-      if (this.tile[numEntries * cap + fault].text === this.lruQueue[0]) {
-        this.tile[numEntries * cap + fault].text = value; // replace
+      this.cursor(this.tiles[numEntries * cap + fault]); await this.delay(this.delayTime);
+      if (this.tiles[numEntries * cap + fault].text === this.lruQueue[0]) {
+        this.tiles[numEntries * cap + fault].text = value; // replace
         this.lruQueue.splice(0, 1); // Remove from queue
         this.lruQueue.push(value); // Add to queue
 
         // Add Fault frame
-        this.tile[numEntries * (capacity + 1) + fault].text = 'F';
-        this.tile[numEntries * (capacity + 1) + fault].color = this.FAULT;
+        this.tiles[numEntries * (capacity + 1) + fault].text = 'F';
+        this.tiles[numEntries * (capacity + 1) + fault].color = this.FAULT;
         break;
       } else {
-        this.cursor(this.tile[numEntries * cap + fault]);
+        this.cursor(this.tiles[numEntries * cap + fault]);
       }
     }
   }

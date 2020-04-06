@@ -61,14 +61,14 @@ export class AppComponent implements OnInit {
       this.error = '';
       this.validate(stream, capacity, algorithm);
 
-      this.fifoComponent.fifoCapacity = undefined;
+      this.fifoComponent.capacity = undefined;
       this.lruComponent.capacity = undefined;
       this.clockComponent.clockCapacity = undefined;
       this.optComponent.capacity = undefined;
 
       const algorithmNum = Number(algorithm);
       if (algorithmNum === 1)
-        this.fifoComponent.execute(stream, capacity, speed);
+        this.fifoComponent.execute(stream, capacity, speed, this);
       else if (algorithmNum === 2)
         this.lruComponent.execute(stream, capacity, speed, this);
       else if (algorithmNum === 3)

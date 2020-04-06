@@ -13,12 +13,12 @@ export abstract class PageAlgorithm {
 
     columns: number;
     capacity: number;
-    tile: Tile[];
+    tiles: Tile[];
 
     delayTime: number = 500;
 
     protected async loadBlocks(stream: string, capacity: string) {
-        this.tile = [];
+        this.tiles = [];
     
         const entry = stream.split(' ');
         this.columns = entry.length;
@@ -33,11 +33,11 @@ export abstract class PageAlgorithm {
     
         for (let index = 0; index < totalPositions; index++) {
           if (index < entry.length) { // Draw header
-            this.tile.push({ text: entry[index], cols: 1, rows: 1, color: this.ALLOC_FRAME, border: this.NOT_READING });
+            this.tiles.push({ text: entry[index], cols: 1, rows: 1, color: this.ALLOC_FRAME, border: this.NOT_READING });
           } else if (index > totalPositions - entry.length) { // Draw fault footer
-            this.tile.push({ text: ' ', cols: 1, rows: 1, color: this.NOT_ALLOC_FRAME, border: this.NOT_READING });
+            this.tiles.push({ text: ' ', cols: 1, rows: 1, color: this.NOT_ALLOC_FRAME, border: this.NOT_READING });
           } else { // Draw empty frame
-            this.tile.push({ text: ' ', cols: 1, rows: 1, color: this.NOT_ALLOC_FRAME, border: this.NOT_READING });
+            this.tiles.push({ text: ' ', cols: 1, rows: 1, color: this.NOT_ALLOC_FRAME, border: this.NOT_READING });
           }
         }
     }
@@ -51,8 +51,8 @@ export abstract class PageAlgorithm {
 
     protected prepareNextBlock(numEntries: number, capacity: number, next: number): void {
         for (let cap = 1; cap <= capacity; cap++) {
-          this.fulfillFrame(this.tile[numEntries * cap + next + 1], // Next frame block
-            this.tile[numEntries * cap + next].text); // Copy previous frame block
+          this.fulfillFrame(this.tiles[numEntries * cap + next + 1], // Next frame block
+            this.tiles[numEntries * cap + next].text); // Copy previous frame block
         }
     }
 

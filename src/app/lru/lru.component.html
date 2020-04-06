@@ -5,7 +5,7 @@
     <div>
       <mat-grid-list cols="{{ columns }}" rowHeight="60px" gutterSize="5px">
         <mat-grid-tile
-            *ngFor="let tile of tile; let i = index"
+            *ngFor="let tile of tiles; let i = index"
             [colspan]="tile.cols"
             [rowspan]="tile.rows"
             [style.background]="tile.color"

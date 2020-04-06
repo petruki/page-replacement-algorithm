@@ -27,15 +27,15 @@ export class OptComponent extends PageAlgorithm implements OnInit {
       
       for (let cap = 1; cap <= capacity; cap++) {
 
-        this.cursor(this.tile[numEntries * cap + next]); await this.delay(this.delayTime);
+        this.cursor(this.tiles[numEntries * cap + next]); await this.delay(this.delayTime);
 
-        if (this.isEmpty(this.tile[numEntries * cap + next])) {
-          this.fulfillFrame(this.tile[numEntries * cap + next], value); await this.delay(this.delayTime);
+        if (this.isEmpty(this.tiles[numEntries * cap + next])) {
+          this.fulfillFrame(this.tiles[numEntries * cap + next], value); await this.delay(this.delayTime);
           this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
           next++;
           break;
         } else {
-          if (this.tile[numEntries * cap + next].text === value) {
+          if (this.tiles[numEntries * cap + next].text === value) {
             await this.delay(this.delayTime);
             if (next + 1 < numEntries) {
               this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
@@ -45,7 +45,7 @@ export class OptComponent extends PageAlgorithm implements OnInit {
           }
         }
 
-        this.cursor(this.tile[numEntries * cap + next]);
+        this.cursor(this.tiles[numEntries * cap + next]);
       }
 
       if (next != fault) fault = next;
@@ -60,16 +60,16 @@ export class OptComponent extends PageAlgorithm implements OnInit {
   protected async fulfillFault(fault: number, numEntries: number, capacity: number, value: any) {
     await this.findOldest(fault, numEntries, capacity);
     for (let cap = 1; cap <= capacity; cap++) {
-      this.cursor(this.tile[numEntries * cap + fault]); await this.delay(this.delayTime);
-      if (this.tile[numEntries * cap + fault].text === this.oldest) {
-        this.tile[numEntries * cap + fault].text = value; // replace
+      this.cursor(this.tiles[numEntries * cap + fault]); await this.delay(this.delayTime);
+      if (this.tiles[numEntries * cap + fault].text === this.oldest) {
+        this.tiles[numEntries * cap + fault].text = value; // replace
 
         // Add Fault frame
-        this.tile[numEntries * (capacity + 1) + fault].text = 'F';
-        this.tile[numEntries * (capacity + 1) + fault].color = this.FAULT;
+        this.tiles[numEntries * (capacity + 1) + fault].text = 'F';
+        this.tiles[numEntries * (capacity + 1) + fault].color = this.FAULT;
         break;
       } else {
-        this.cursor(this.tile[numEntries * cap + fault]);
+        this.cursor(this.tiles[numEntries * cap + fault]);
       }
     }
   }
@@ -78,19 +78,19 @@ export class OptComponent extends PageAlgorithm implements OnInit {
     let pos = -1;
     let oldesPos = -1;
     for (let capRead = 1; capRead <= capacity; capRead++) {
-      const valueRead = this.tile[numEntries * capRead + fault].text;
+      const valueRead = this.tiles[numEntries * capRead + fault].text;
 
       pos = -1;
       for (let index = fault + 1; index < numEntries; index++) {
-        this.tile[index].border = this.READING; await this.delay(this.delayTime);
-        let headerValue = this.tile[index].text;
+        this.tiles[index].border = this.READING; await this.delay(this.delayTime);
+        let headerValue = this.tiles[index].text;
 
         if (headerValue === valueRead) {
           pos = index;
-          this.tile[index].border = this.NOT_READING;
+          this.tiles[index].border = this.NOT_READING;
           break;
         }
-        this.tile[index].border = this.NOT_READING;
+        this.tiles[index].border = this.NOT_READING;
       }
 
       // Found first oldest - should exit
