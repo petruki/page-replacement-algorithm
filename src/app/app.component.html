@@ -57,6 +57,9 @@
     <button mat-raised-button color="{{ paused ? 'primary' : 'warn' }}" style="padding: 5px; margin: inherit;" 
       (click)="onControl()" [disabled]="!executing">{{ paused ? 'Resume' : 'Pause' }}</button>
 
+    <button mat-stroked-button color="warn" style="padding: 5px; margin: inherit;" 
+      (click)="onAbort()" [disabled]="!executing">Abort</button>
+
     <app-fifo #fifoComponent></app-fifo>
     <app-lru #lruComponent></app-lru>
     <app-clock #clockComponent></app-clock>

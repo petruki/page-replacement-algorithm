@@ -17,6 +17,7 @@ export abstract class PageAlgorithm {
 
   protected delayTime: number = 500;
   private paused: boolean = false;
+  private aborted: boolean = false;
 
   protected async loadBlocks(stream: string, capacity: string) {
     this.tiles = [];
@@ -78,21 +79,33 @@ export abstract class PageAlgorithm {
   }
 
   protected async delay(ms: number) {
+    if (this.aborted) {
+      this.abort(); 
+      throw new Error('Aborted');
+    }
+
     while (this.paused) {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  toggle() {
+  public toggle() {
     this.paused = !this.paused;
   }
 
+  public abort() {
+    this.paused = false;
+    this.aborted = !this.aborted;
+  }
+
   public async execute(stream: string, capacity: string, speed: any, app: AppComponent) {
-    this.capacity = Number(capacity);
-    this.delayTime = Number(speed);
-    app.executing = true;
-    await this.loadBlocks(stream, capacity);
+    try {
+      this.capacity = Number(capacity);
+      this.delayTime = Number(speed);
+      app.executing = true;
+      await this.loadBlocks(stream, capacity);
+    } catch (e) {}
     app.executing = false;
   }
 

@@ -98,4 +98,22 @@ export class AppComponent implements OnInit {
       this.optComponent.toggle();
   }
 
+  public onAbort() {
+    this.paused = false;
+    
+    this.fifoComponent.capacity = undefined;
+    this.lruComponent.capacity = undefined;
+    this.clockComponent.capacity = undefined;
+    this.optComponent.capacity = undefined;
+
+    if (this.algorithmNum === 1)
+      this.fifoComponent.abort();
+    else if (this.algorithmNum === 2)
+      this.lruComponent.abort();
+    else if (this.algorithmNum === 3)
+      this.clockComponent.abort();
+    else if (this.algorithmNum === 4)
+      this.optComponent.abort();
+  }
+
 }
