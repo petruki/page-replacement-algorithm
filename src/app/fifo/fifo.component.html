@@ -16,4 +16,14 @@
       </mat-grid-list>
     </div>
     <h1 [textContent]="'Queue: ' + fifoQueue"></h1>
+
+    <section id="logPanel" class="section results" style="margin: 0px;">
+      <div class="title">
+        <h1 style="margin: auto;">Log</h1>
+      </div>
+      <mat-form-field style="width: 100%;">
+        <textarea matInput [value]="log" rows="40" readonly="true">
+        </textarea>
+      </mat-form-field>
+    </section>
 </div>

@@ -11,6 +11,7 @@ export abstract class PageAlgorithm {
   protected READING: string = '2px solid #ff000091';
   protected NOT_READING: string = '0px';
 
+  log: string = '';
   columns: number;
   capacity: number;
   tiles: Tile[];

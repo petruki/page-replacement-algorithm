@@ -11,8 +11,18 @@
             [style.background]="tile.color"
             [style.border]="tile.border">
             {{ i >= columns ? tile.text : ' '}}
-        <mat-grid-tile-header *ngIf="i  < columns">{{tile.text}}</mat-grid-tile-header>
+        <mat-grid-tile-header *ngIf="i < columns">{{tile.text}}</mat-grid-tile-header>
         </mat-grid-tile>
       </mat-grid-list>
     </div>
+
+    <section id="logPanel" class="section results" style="margin: 0px;">
+      <div class="title">
+        <h1 style="margin: auto;">Log</h1>
+      </div>
+      <mat-form-field style="width: 100%;">
+        <textarea matInput [value]="log" rows="40" readonly="true">
+        </textarea>
+      </mat-form-field>
+    </section>
 </div>

@@ -21,14 +21,17 @@ export class FifoComponent extends PageAlgorithm implements OnInit {
 
     let next = 0, fault = 0;
     this.fifoQueue = []
+    this.log = '- Starting FIFO sequence';
     for (let index = 0; index < entry.length; index++) {
       const value = entry[index];
-      
+      this.log += '\n\n[' + index + '] Reading value:' + value;
+
       for (let cap = 1; cap <= capacity; cap++) {
 
         this.cursor(this.tiles[numEntries * cap + next]); await this.delay(this.delayTime);
 
         if (this.isEmpty(this.tiles[numEntries * cap + next])) {
+          this.log += '\n- Empty page, inserting new page...';
           this.fifoQueue.push(value); // Store FI element
 
           this.fulfillFrame(this.tiles[numEntries * cap + next], value); await this.delay(this.delayTime);
@@ -37,6 +40,7 @@ export class FifoComponent extends PageAlgorithm implements OnInit {
           break;
         } else {
           if (this.tiles[numEntries * cap + next].text === value) {
+            this.log += '\n- Page found, referencing the page';
             await this.delay(this.delayTime);
             if (next + 1 < numEntries) {
               this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
@@ -51,6 +55,7 @@ export class FifoComponent extends PageAlgorithm implements OnInit {
 
       if (next != fault) fault = next;
       else {
+        this.log += '\n- Page fault, validating replacement...';
         await this.verifyFault(fault, next,  numEntries, capacity, value);
         next++;
         fault = next;
@@ -62,6 +67,9 @@ export class FifoComponent extends PageAlgorithm implements OnInit {
     for (let cap = 1; cap <= capacity; cap++) {
       this.cursor(this.tiles[numEntries * cap + fault]); await this.delay(this.delayTime);
       if (this.tiles[numEntries * cap + fault].text === this.fifoQueue[0]) {
+        this.log += '\n-- Replacing page ' + this.tiles[numEntries * cap + fault].text + ' with ' + value;
+        this.log += '\n-- Adding ' + value + ' to the queue';
+        this.log += '\n-- Removing ' + this.fifoQueue[0] + ' from the queue';
         this.tiles[numEntries * cap + fault].text = value; // replace
         this.fifoQueue.splice(0, 1); // Remove from queue
         this.fifoQueue.push(value); // Add to queue
