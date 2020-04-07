@@ -36,9 +36,10 @@ export class ClockComponent extends PageAlgorithm implements OnInit {
           if (this.tiles[numEntries * cap + next].text.replace('*', '') === entry[index]) {
             this.log += '\n- Page found, referencing the page';
             await this.delay(this.delayTime);
-            if (this.tiles[numEntries * cap + next].text.indexOf('*') < 0)
+            if (this.tiles[numEntries * cap + next].text.indexOf('*') < 0) {
               this.log += '\n-- Page does not have the bit (*)';
               this.tiles[numEntries * cap + next].text = this.tiles[numEntries * cap + next].text + "*";
+            }
             if (next + 1 < numEntries) {
               this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
             }
