@@ -123,6 +123,9 @@ export abstract class PageAlgorithm {
   }
 
   public async execute(stream: string, capacity: string, speed: any, app: AppComponent) {
+    this.log = '';
+    this.logHeader = [];
+    
     try {
       this.capacity = Number(capacity);
       this.delayTime = Number(speed);
