@@ -1,5 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { AppComponent, Tile } from '../app.component';
+import { Component, OnInit } from '@angular/core';
 import { PageAlgorithm } from '../page-algorithm';
 
 @Component({
@@ -22,24 +21,25 @@ export class OptComponent extends PageAlgorithm implements OnInit {
 
     let next = 0, fault = 0;
     this.oldest = '';
-    this.log = '- Starting OPT sequence';
+    this.addLog('- Starting OPT sequence');
     for (let index = 0; index < entry.length; index++) {
+      this.elementIndex = index;
       const value = entry[index];
-      this.log += '\n\n[' + index + '] Reading value:' + value;
+      this.addLog(`\n[${index}] Reading value: ${value}`);
 
       for (let cap = 1; cap <= capacity; cap++) {
 
         this.cursor(this.tiles[numEntries * cap + next]); await this.delay(this.delayTime);
 
         if (this.isEmpty(this.tiles[numEntries * cap + next])) {
-          this.log += '\n- Empty page, inserting new page...';
+          this.addLog('- Empty block, inserting new page...');
           this.fulfillFrame(this.tiles[numEntries * cap + next], value); await this.delay(this.delayTime);
           this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
           next++;
           break;
         } else {
           if (this.tiles[numEntries * cap + next].text === value) {
-            this.log += '\n- Page found, referencing the page';
+            this.addLog('- Page found, referencing the page');
             await this.delay(this.delayTime);
             if (next + 1 < numEntries) {
               this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
@@ -54,7 +54,7 @@ export class OptComponent extends PageAlgorithm implements OnInit {
 
       if (next != fault) fault = next;
       else {
-        this.log += '\n- Page fault, validating replacement...';
+        this.addLog('- Page fault, validating replacement...');
         await this.verifyFault(fault, next,  numEntries, capacity, value);
         next++;
         fault = next;
@@ -67,7 +67,7 @@ export class OptComponent extends PageAlgorithm implements OnInit {
     for (let cap = 1; cap <= capacity; cap++) {
       this.cursor(this.tiles[numEntries * cap + fault]); await this.delay(this.delayTime);
       if (this.tiles[numEntries * cap + fault].text === this.oldest) {
-        this.log += '\n-- Replacing page ' + this.oldest + ' with ' + value;
+        this.addLog(`-- Replacing page ${this.oldest} with ${value}`);
         this.tiles[numEntries * cap + fault].text = value; // replace
 
         // Add Fault frame
@@ -83,7 +83,7 @@ export class OptComponent extends PageAlgorithm implements OnInit {
   private async findOldest(fault: number, numEntries: number, capacity: number) {
     let pos = -1;
     let oldesPos = -1;
-    this.log += '\n-- Finding the oldest value...';
+    this.addLog('-- Finding the oldest value...');
     for (let capRead = 1; capRead <= capacity; capRead++) {
       const valueRead = this.tiles[numEntries * capRead + fault].text;
 
@@ -109,6 +109,6 @@ export class OptComponent extends PageAlgorithm implements OnInit {
         this.oldest = valueRead;
       }
     }
-    this.log += '\n-- Found oldest: ' + this.oldest;
+    this.addLog(`-- Found oldest: ${this.oldest}`);
   }
 }

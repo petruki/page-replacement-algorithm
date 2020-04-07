@@ -1,4 +1,13 @@
-import { Tile, AppComponent } from './app.component';
+import { AppComponent } from './app.component';
+
+export interface Tile {
+  color: string;
+  cols: number;
+  rows: number;
+  text: string;
+  border: string;
+  log?: string;
+}
 
 export abstract class PageAlgorithm {
 
@@ -11,6 +20,8 @@ export abstract class PageAlgorithm {
   protected READING: string = '2px solid #ff000091';
   protected NOT_READING: string = '0px';
 
+  elementIndex: number;
+  logHeader: string[] = [];
   log: string = '';
   columns: number;
   capacity: number;
@@ -37,6 +48,7 @@ export abstract class PageAlgorithm {
     for (let index = 0; index < totalPositions; index++) {
       if (index < entry.length) { // Draw header
         this.tiles.push({ text: entry[index], cols: 1, rows: 1, color: this.ALLOC_FRAME, border: this.NOT_READING });
+        this.logHeader[index] = '';
       } else if (index > totalPositions - entry.length) { // Draw fault footer
         this.tiles.push({ text: ' ', cols: 1, rows: 1, color: this.NOT_ALLOC_FRAME, border: this.NOT_READING });
       } else { // Draw empty frame
@@ -79,15 +91,25 @@ export abstract class PageAlgorithm {
     return tile.text === ' ';
   }
 
+  protected addLog(log: string): void {
+    this.log += `\n${log}`;
+
+    if (this.elementIndex > -1) {
+      this.logHeader[this.elementIndex] += `\n${log}`;
+      this.tiles[this.elementIndex].log = this.logHeader[this.elementIndex].trim();
+    }
+  }
+
   protected async delay(ms: number) {
     if (this.aborted) {
       this.abort(); 
       throw new Error('Aborted');
     }
 
-    while (this.paused) {
+    //Ikr, it's a CPU killer. Nothing fancy, but it works.
+    while (this.paused)
       await new Promise(resolve => setTimeout(resolve, 500));
-    }
+      
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 

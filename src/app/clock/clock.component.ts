@@ -1,5 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { AppComponent, Tile } from '../app.component';
+import { Component, OnInit } from '@angular/core';
 import { PageAlgorithm } from '../page-algorithm';
 
 @Component({
@@ -20,13 +19,14 @@ export class ClockComponent extends PageAlgorithm implements OnInit {
 
     let next = 0, fault = 0;
 
-    this.log = '- Starting Clock sequence';
+    this.addLog('- Starting Clock sequence');
     for (let index = 0; index < entry.length; index++) {
-      this.log += '\n\n[' + index + '] Reading value:' + entry[index];
+      this.elementIndex = index;
+      this.addLog(`\n[${index}] Reading value: ${entry[index]}`);
       
       for (let cap = 1; cap <= capacity; cap++) {
         if (this.isEmpty(this.tiles[numEntries * cap + next])) {
-          this.log += '\n- Empty page, inserting new page...';
+          this.addLog('- Empty block, inserting new page...');
           this.fulfillFrame(this.tiles[numEntries * cap + next], entry[index] + '*'); await this.delay(this.delayTime);
           this.moveCursor(numEntries, cap, next); await this.delay(this.delayTime);
           this.prepareNextBlock(numEntries, capacity, next); 
@@ -34,10 +34,10 @@ export class ClockComponent extends PageAlgorithm implements OnInit {
           break;
         } else {
           if (this.tiles[numEntries * cap + next].text.replace('*', '') === entry[index]) {
-            this.log += '\n- Page found, referencing the page';
+            this.addLog('- Page found, referencing the page');
             await this.delay(this.delayTime);
             if (this.tiles[numEntries * cap + next].text.indexOf('*') < 0) {
-              this.log += '\n-- Page does not have the bit (*)';
+              this.addLog('-- Page does not have the bit (*)');
               this.tiles[numEntries * cap + next].text = this.tiles[numEntries * cap + next].text + "*";
             }
             if (next + 1 < numEntries) {
@@ -51,7 +51,7 @@ export class ClockComponent extends PageAlgorithm implements OnInit {
 
       if (next != fault) fault = next;
       else {
-        this.log += '\n- Page fault, validating replacement...';
+        this.addLog('- Page fault, validating replacement...');
         await this.verifyFault(next,  numEntries, capacity, entry[index]);
         next++;
         fault = next;
@@ -71,7 +71,7 @@ export class ClockComponent extends PageAlgorithm implements OnInit {
     for (let cap = 1; cap <= capacity; cap++) {
 
       if (this.tiles[numEntries * cap + next].text.indexOf('*') < 0) {
-        this.log += '\n-- Replacing page ' + this.tiles[numEntries * cap + next].text + ' with ' + value + '*';
+        this.addLog(`-- Replacing page ${this.tiles[numEntries * cap + next].text} with ${value}*`);
         checked = true;
         this.tiles[numEntries * cap + next].text = value + '*'; // replace
         await this.removeBit(numEntries, capacity, next, cap);
@@ -81,7 +81,7 @@ export class ClockComponent extends PageAlgorithm implements OnInit {
     }
 
     if (!checked) {
-      this.log += '\n-- Replacing page ' + this.tiles[numEntries * 1 + next].text + ' with ' + value + '*';
+      this.addLog(`-- Replacing page ${this.tiles[numEntries * 1 + next].text} with ${value}*`);
       this.tiles[numEntries * 1 + next].text = value + '*'; // replace
       await this.removeBit(numEntries, capacity, next, 1);
       this.moveCursor(numEntries, 1, next); await this.delay(this.delayTime);
@@ -94,7 +94,7 @@ export class ClockComponent extends PageAlgorithm implements OnInit {
   }
 
   private async removeBit(numEntries: number, capacity: number, next: number, cap: number) {
-    this.log += '\n--- Removing bit from the coming pages...';
+    this.addLog(`--- Removing bit from the coming pages...`);
     if (cap + 1 < capacity) {
       for (let index = cap + 1; index <= capacity; index++) {
         this.tiles[numEntries * index + next].text = this.tiles[numEntries * index + next].text.replace('*', ''); await this.delay(this.delayTime);

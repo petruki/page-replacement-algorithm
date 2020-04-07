@@ -9,9 +9,10 @@
             [colspan]="tile.cols"
             [rowspan]="tile.rows"
             [style.background]="tile.color"
-            [style.border]="tile.border">
+            [style.border]="tile.border"
+            title="{{tile?.log}}">
             {{ i >= columns ? tile.text : ' '}}
-        <mat-grid-tile-header *ngIf="i  < columns">{{tile.text}}</mat-grid-tile-header>
+        <mat-grid-tile-header *ngIf="i < columns">{{tile.text}}</mat-grid-tile-header>
         </mat-grid-tile>
       </mat-grid-list>
     </div>

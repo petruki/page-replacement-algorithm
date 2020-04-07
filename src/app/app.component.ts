@@ -4,14 +4,6 @@ import { LruComponent } from './lru/lru.component';
 import { ClockComponent } from './clock/clock.component';
 import { OptComponent } from './opt/opt.component';
 
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
-  border: string;
-}
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
