@@ -26,8 +26,9 @@ export class ClockComponent extends PageAlgorithm implements OnInit {
       
       for (let cap = 1; cap <= capacity; cap++) {
         if (this.isEmpty(this.tiles[numEntries * cap + next])) {
-          this.addLog('- Empty block, inserting new page...');
+          this.addLog('- Page Fault loading in...');
           this.fulfillFrame(this.tiles[numEntries * cap + next], entry[index] + '*'); await this.delay(this.delayTime);
+          this.fulfillPageFault(numEntries, capacity, next);
           this.moveCursor(numEntries, cap, next); await this.delay(this.delayTime);
           this.prepareNextBlock(numEntries, capacity, next); 
           next++;
@@ -87,10 +88,7 @@ export class ClockComponent extends PageAlgorithm implements OnInit {
       this.moveCursor(numEntries, 1, next); await this.delay(this.delayTime);
     }
 
-    // Add Fault frame
-    this.tiles[numEntries * (capacity + 1) + next].text = 'F';
-    this.tiles[numEntries * (capacity + 1) + next].color = this.FAULT;
-  
+    this.fulfillPageFault(numEntries, capacity, next);
   }
 
   private async removeBit(numEntries: number, capacity: number, next: number, cap: number) {

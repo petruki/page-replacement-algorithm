@@ -80,6 +80,11 @@ export abstract class PageAlgorithm {
     tile.text = value;
   }
 
+  protected fulfillPageFault(numEntries: number, capacity: number, next: number): void {
+    this.tiles[numEntries * (capacity + 1) + next].text = 'F';
+    this.tiles[numEntries * (capacity + 1) + next].color = this.FAULT;
+  }
+
   protected cursor(tile: Tile): void {
     if (tile.border === this.READING)
       tile.border = this.NOT_READING;

@@ -31,10 +31,11 @@ export class FifoComponent extends PageAlgorithm implements OnInit {
         this.cursor(this.tiles[numEntries * cap + next]); await this.delay(this.delayTime);
 
         if (this.isEmpty(this.tiles[numEntries * cap + next])) {
-          this.addLog('- Empty block, inserting new page...');
+          this.addLog('- Page Fault loading in...');
           this.fifoQueue.push(value); // Store FI element
 
           this.fulfillFrame(this.tiles[numEntries * cap + next], value); await this.delay(this.delayTime);
+          this.fulfillPageFault(numEntries, capacity, next);
           this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
           next++;
           break;
@@ -74,9 +75,7 @@ export class FifoComponent extends PageAlgorithm implements OnInit {
         this.fifoQueue.splice(0, 1); // Remove from queue
         this.fifoQueue.push(value); // Add to queue
 
-        // Add Fault frame
-        this.tiles[numEntries * (capacity + 1) + fault].text = 'F';
-        this.tiles[numEntries * (capacity + 1) + fault].color = this.FAULT;
+        this.fulfillPageFault(numEntries, capacity, fault);
         break;
       } else {
         this.cursor(this.tiles[numEntries * cap + fault]);

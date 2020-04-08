@@ -32,8 +32,9 @@ export class OptComponent extends PageAlgorithm implements OnInit {
         this.cursor(this.tiles[numEntries * cap + next]); await this.delay(this.delayTime);
 
         if (this.isEmpty(this.tiles[numEntries * cap + next])) {
-          this.addLog('- Empty block, inserting new page...');
+          this.addLog('- Page Fault loading in...');
           this.fulfillFrame(this.tiles[numEntries * cap + next], value); await this.delay(this.delayTime);
+          this.fulfillPageFault(numEntries, capacity, next);
           this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
           next++;
           break;
@@ -70,9 +71,7 @@ export class OptComponent extends PageAlgorithm implements OnInit {
         this.addLog(`-- Replacing page ${this.oldest} with ${value}`);
         this.tiles[numEntries * cap + fault].text = value; // replace
 
-        // Add Fault frame
-        this.tiles[numEntries * (capacity + 1) + fault].text = 'F';
-        this.tiles[numEntries * (capacity + 1) + fault].color = this.FAULT;
+        this.fulfillPageFault(numEntries, capacity, fault);
         break;
       } else {
         this.cursor(this.tiles[numEntries * cap + fault]);
