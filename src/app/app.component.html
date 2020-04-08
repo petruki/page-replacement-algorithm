@@ -6,7 +6,7 @@
 
 <div class="content" role="main">
 
-  <section class="section input">
+  <section class="section input" style="grid-area: input;">
     <div class="title">
       <h1 style="margin: auto;">Input</h1>
     </div>
@@ -37,7 +37,7 @@
       (click)="onExecute(stream.value, capacity.value, speed.value, algorithm.value)" [disabled]="executing">Execute</button>
   </section>
 
-  <section class="section input">
+  <section class="section input" style="grid-area: algorithm;">
     <div class="title">
       <h1 style="margin: auto;">Algorithm</h1>
     </div>
@@ -49,15 +49,15 @@
     </mat-radio-group>    
   </section>
 
-  <section id="resultPanel" class="section results">
+  <section id="resultPanel" class="section results" style="grid-area: result;">
     <mat-error *ngIf="error">{{ error }}</mat-error>
     <div class="title">
       <h1 style="margin: auto;">Results</h1>
     </div>
-    <button mat-raised-button color="{{ paused ? 'primary' : 'warn' }}" style="padding: 5px; margin: inherit;" 
+    <button mat-raised-button color="{{ paused ? 'primary' : 'warn' }}" style="margin: inherit;" 
       (click)="onControl()" [disabled]="!executing">{{ paused ? 'Resume' : 'Pause' }}</button>
 
-    <button mat-stroked-button color="warn" style="padding: 5px; margin: inherit;" 
+    <button mat-stroked-button color="warn" style="margin: inherit;" 
       (click)="onAbort()" [disabled]="!executing">Abort</button>
 
     <app-fifo #fifoComponent></app-fifo>

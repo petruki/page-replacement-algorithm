@@ -24,10 +24,11 @@
 .content {
   display: grid;
   margin: 32px auto;
-  padding: 0 16px;
-  max-width: 960px;
+  padding: 0 10px;
+  max-width: 1500px;
   flex-direction: column;
   align-items: center;
+  grid-template-areas: "input algorithm" "result result";
 }
 
 .section {
@@ -37,7 +38,7 @@
 }
 
 .section.input {
-  display: -webkit-box;
+  height: 100%;
 }
 
 .title {
@@ -74,8 +75,9 @@
 }
 
 .input-algorithm-form {
-  display: flex;
   margin: 10px;
+  text-align: center; 
+  display: block;
 }
 
 .mat-radio-button {
@@ -93,6 +95,10 @@
 }
 
 @media screen and (max-width: 680px) {
+  .content {
+    display: block;
+  }
+
   .input-algorithm-form {
     display: block;
   }

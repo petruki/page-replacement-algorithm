@@ -70,8 +70,8 @@ export class AppComponent implements OnInit {
       else if (this.algorithmNum === 4)
         this.optComponent.execute(stream, capacity, speed, this);
 
-      const resultPanel = document.getElementById('resultPanel');
-      resultPanel.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+      // const resultPanel = document.getElementById('resultPanel');
+      // resultPanel.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
     } catch (e) {
       this.error = e.message;
     }

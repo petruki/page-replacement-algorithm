@@ -18,13 +18,15 @@
     </div>
     <h1 [textContent]="'Queue: ' + lruQueue"></h1>
 
-    <section id="logPanel" class="section results" style="margin: 0px;">
-      <div class="title">
-        <h1 style="margin: auto;">Log</h1>
-      </div>
+    <mat-expansion-panel (closed)="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Execution Log
+        </mat-panel-title>
+      </mat-expansion-panel-header>
       <mat-form-field style="width: 100%;">
         <textarea matInput [value]="log" rows="40" readonly="true">
         </textarea>
       </mat-form-field>
-    </section>
+    </mat-expansion-panel>
 </div>
