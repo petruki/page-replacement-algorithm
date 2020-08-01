@@ -118,6 +118,10 @@
               "devServerTarget": "page-replacement-algorithm:serve:production"
             }
           }
+        },
+        "deploy-ghpages": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {}
         }
       }
     }
