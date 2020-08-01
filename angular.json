@@ -119,7 +119,7 @@
             }
           }
         },
-        "deploy-ghpages": {
+        "deploy": {
           "builder": "angular-cli-ghpages:deploy",
           "options": {}
         }
