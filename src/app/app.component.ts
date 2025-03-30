@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FifoComponent } from './fifo/fifo.component';
 import { LruComponent } from './lru/lru.component';
 import { ClockComponent } from './clock/clock.component';
@@ -7,30 +7,27 @@ import { OptComponent } from './opt/opt.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  standalone: false
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
   @ViewChild('fifoComponent', { static: true })
-  private fifoComponent: FifoComponent;
+  private readonly fifoComponent: FifoComponent;
 
   @ViewChild('lruComponent', { static: true })
-  private lruComponent: LruComponent;
+  private readonly lruComponent: LruComponent;
 
   @ViewChild('clockComponent', { static: true })
-  private clockComponent: ClockComponent;
+  private readonly clockComponent: ClockComponent;
 
   @ViewChild('optComponent', { static: true })
-  private optComponent: OptComponent;
+  private readonly optComponent: OptComponent;
 
   executing: boolean = false;
   error: string = '';
   algorithmNum: number;
   paused: boolean = false;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 
   private validate(stream: string, capacity: string, algorithm: any): void {
     if (!stream || stream.trim() === '') {
@@ -47,7 +44,7 @@ export class AppComponent implements OnInit {
     if (charCode > 31 && (charCode < 48 || charCode > 57))
       return false;
 
-    return !value ? true : false;
+    return !value;
   }
 
   public onExecute(stream: string, capacity: string, speed: any, algorithm: any): void {
@@ -69,9 +66,6 @@ export class AppComponent implements OnInit {
         this.clockComponent.execute(stream, capacity, speed, this);
       else if (this.algorithmNum === 4)
         this.optComponent.execute(stream, capacity, speed, this);
-
-      // const resultPanel = document.getElementById('resultPanel');
-      // resultPanel.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
     } catch (e) {
       this.error = e.message;
     }

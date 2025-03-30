@@ -60,16 +60,32 @@ body {
   max-width: 180px;
 }
 
-.footer-right {
-  float: right;
-  margin-top: 6px;
-  max-width: 180px;
-}
-
 .footer-links a {
   font-size: 18px;
   font-weight: bold;
   color: #ffffff;
   margin: 0 0 10px;
   padding: 0;
+}
+
+/* Custom css */
+
+.mat-mdc-form-field-hint-wrapper {
+  padding: 0 !important;
+}
+
+.mat-mdc-card-content {
+  padding: 0 !important;
+}
+
+.mat-expansion-panel {
+  background: none !important;
+}
+
+.mat-mdc-text-field-wrapper {
+  padding-left: 0 !important;
+}
+
+.mdc-text-field--filled {
+  background-color: #fff0 !important;
 }

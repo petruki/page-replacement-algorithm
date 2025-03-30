@@ -1,11 +1,10 @@
-<div class="toolbar" role="banner">
+<header class="toolbar" role="banner">
   <img width="40" alt="Switcher API Logo"
     src="https://raw.githubusercontent.com/petruki/switcher-management/master/src/assets/switcherapi_mark_grey.png" />
   <span>Page Replacement Algorithms</span>
-</div>
+</header>
 
-<div class="content" role="main">
-
+<main class="content">
   <section class="section input" style="grid-area: input;">
     <div class="title">
       <h1 style="margin: auto;">Input</h1>
@@ -33,7 +32,7 @@
       <mat-hint>Add values separated by spaces</mat-hint>
     </mat-form-field>
 
-    <button id="btnExecute" mat-raised-button color="primary" style="padding: 5px; margin: inherit;" 
+    <button id="btnExecute" mat-raised-button color="primary"
       (click)="onExecute(stream.value, capacity.value, speed.value, algorithm.value)" [disabled]="executing">Execute</button>
   </section>
 
@@ -65,5 +64,4 @@
     <app-clock #clockComponent></app-clock>
     <app-opt #optComponent></app-opt>
   </section>
-
-</div>
+</main>

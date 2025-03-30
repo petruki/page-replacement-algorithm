@@ -1,20 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageAlgorithm } from '../page-algorithm';
 
 @Component({
   selector: 'app-opt',
   templateUrl: './opt.component.html',
-  styleUrls: ['../app.component.css']
+  styleUrls: ['../app.component.css'],
+  standalone: false
 })
-export class OptComponent extends PageAlgorithm implements OnInit {
+export class OptComponent extends PageAlgorithm {
 
   oldest: any;
   
   constructor() {
     super();
   }
-
-  ngOnInit(): void {}
   
   protected async exeuteAlgorithm(entry: string[], capacity: number) {
     const numEntries = entry.length;
@@ -38,8 +37,7 @@ export class OptComponent extends PageAlgorithm implements OnInit {
           this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
           next++;
           break;
-        } else {
-          if (this.tiles[numEntries * cap + next].text === value) {
+        } else if (this.tiles[numEntries * cap + next].text === value) {
             this.addLog('- Page found, referencing the page');
             await this.delay(this.delayTime);
             if (next + 1 < numEntries) {
@@ -48,19 +46,24 @@ export class OptComponent extends PageAlgorithm implements OnInit {
             next++;
             break;
           }
-        }
 
         this.cursor(this.tiles[numEntries * cap + next]);
       }
 
-      if (next != fault) fault = next;
-      else {
-        this.addLog('- Page fault, validating replacement...');
-        await this.verifyFault(fault, next,  numEntries, capacity, value);
-        next++;
-        fault = next;
-      }
+      ({ next, fault } = await this.checkFault(next, fault, numEntries, capacity, value));
     }
+  }
+
+  private async checkFault(next: number, fault: number, numEntries: number, capacity: number, value: string) {
+    if (next != fault) {
+      this.addLog('- Page fault, validating replacement...');
+      await this.verifyFault(fault, next, numEntries, capacity, value);
+      next++;
+      fault = next;
+    } else {
+      fault = next;
+    }
+    return { next, fault };
   }
 
   protected async fulfillFault(fault: number, numEntries: number, capacity: number, value: any) {

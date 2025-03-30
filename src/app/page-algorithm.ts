@@ -140,8 +140,8 @@ export abstract class PageAlgorithm {
     app.executing = false;
   }
 
-  protected abstract async exeuteAlgorithm(entry: string[], capacity: number): Promise<any>
+  protected abstract exeuteAlgorithm(entry: string[], capacity: number): Promise<any>
 
-  protected abstract async fulfillFault(fault: number, numEntries: number, capacity: number, value: any): Promise<any>
+  protected abstract fulfillFault(fault: number, numEntries: number, capacity: number, value: any): Promise<any>
 
 }

@@ -39,11 +39,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { FifoComponent } from './fifo/fifo.component';
 import { LruComponent } from './lru/lru.component';
 import { ClockComponent } from './clock/clock.component';
 import { OptComponent } from './opt/opt.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -58,7 +58,6 @@ import { OptComponent } from './opt/opt.component';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule,
     MatFormFieldModule,
     MatAutocompleteModule,
     MatBadgeModule,
@@ -96,7 +95,9 @@ import { OptComponent } from './opt/opt.component';
     MatTooltipModule,
     MatTreeModule
   ],
-  providers: [],
+  providers: [
+    provideHttpClient(withInterceptorsFromDi()),
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,18 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageAlgorithm } from '../page-algorithm';
 
 @Component({
   selector: 'app-clock',
   templateUrl: './clock.component.html',
-  styleUrls: ['../app.component.css']
+  styleUrls: ['../app.component.css'],
+  standalone: false
 })
-export class ClockComponent extends PageAlgorithm implements OnInit {
+export class ClockComponent extends PageAlgorithm {
 
   constructor() {
     super();
   }
-
-  ngOnInit(): void {}
 
   protected async exeuteAlgorithm(entry: string[], capacity: number) {
     const numEntries = entry.length;
@@ -33,31 +32,37 @@ export class ClockComponent extends PageAlgorithm implements OnInit {
           this.prepareNextBlock(numEntries, capacity, next); 
           next++;
           break;
-        } else {
-          if (this.tiles[numEntries * cap + next].text.replace('*', '') === entry[index]) {
+        } else if (this.tiles[numEntries * cap + next].text.replace('*', '') === entry[index]) {
             this.addLog('- Page found, referencing the page');
             await this.delay(this.delayTime);
+
             if (this.tiles[numEntries * cap + next].text.indexOf('*') < 0) {
               this.addLog('-- Page does not have the bit (*)');
               this.tiles[numEntries * cap + next].text = this.tiles[numEntries * cap + next].text + "*";
             }
+
             if (next + 1 < numEntries) {
               this.prepareNextBlock(numEntries, capacity, next); await this.delay(this.delayTime);
             }
             next++;
             break;
           }
-        }
       }
 
-      if (next != fault) fault = next;
-      else {
-        this.addLog('- Page fault, validating replacement...');
-        await this.verifyFault(next,  numEntries, capacity, entry[index]);
-        next++;
-        fault = next;
-      }
+      ({ next, fault } = await this.checkFault(next, fault, numEntries, capacity, entry, index));
     }
+  }
+
+  private async checkFault(next: number, fault: number, numEntries: number, capacity: number, entry: string[], index: number) {
+    if (next == fault) {
+      this.addLog('- Page fault, validating replacement...');
+      await this.verifyFault(next, numEntries, capacity, entry[index]);
+      next++;
+      fault = next;
+    } else {
+      fault = next;
+    }
+    return { next, fault };
   }
 
   protected async verifyFault(next: number,  numEntries: number, capacity: number, value: any) {
