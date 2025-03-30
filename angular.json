@@ -121,7 +121,11 @@
         },
         "deploy": {
           "builder": "angular-cli-ghpages:deploy",
-          "options": {}
+          "options": {
+            "dir": "dist/page-replacement-algorithm",
+            "branch": "gh-pages",
+            "message": "Deploying to gh-pages"
+          }
         }
       }
     }
