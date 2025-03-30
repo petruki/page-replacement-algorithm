@@ -15,9 +15,14 @@ jobs:
       with:
         node-version: 22.x
 
+    - name: Install dependencies
+      run: npm install
+
+    - name: Create .nojekyll file
+      run: echo > dist/page-replacement-algorithm/browser/.nojekyll
+
     - name: Prepare and deploy
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        npm install
         npm run ng -- deploy --base-href=/page-replacement-algorithm/ --name="petruki" --email="roger.petruki@gmail.com" --no-silent
