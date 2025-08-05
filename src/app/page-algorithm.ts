@@ -136,7 +136,7 @@ export abstract class PageAlgorithm {
       this.delayTime = Number(speed);
       app.executing = true;
       await this.loadBlocks(stream, capacity);
-    } catch (e) {}
+    } catch {}
     app.executing = false;
   }
 
