@@ -1,19 +1,23 @@
-<div *ngIf="capacity" id="result-fifo" class="result-form">
+@if (capacity) {
+<div id="result-fifo" class="result-form">
     <div class="title">
       <h1 style="margin: auto;">FIFO</h1>
     </div>
     <div>
       <mat-grid-list cols="{{ columns }}" rowHeight="60px" gutterSize="5px">
+        @for (tile of tiles; track $index; let i = $index) {
         <mat-grid-tile
-            *ngFor="let tile of tiles; let i = index"
             [colspan]="tile.cols"
             [rowspan]="tile.rows"
             [style.background]="tile.color"
             [style.border]="tile.border"
             title="{{tile?.log}}">
             {{ i >= columns ? tile.text : ' '}}
-        <mat-grid-tile-header *ngIf="i < columns">{{tile.text}}</mat-grid-tile-header>
+        @if (i < columns) {
+        <mat-grid-tile-header>{{tile.text}}</mat-grid-tile-header>
+        }
         </mat-grid-tile>
+        }
       </mat-grid-list>
     </div>
     <h1 [textContent]="'Queue: ' + fifoQueue"></h1>
@@ -30,3 +34,4 @@
       </mat-form-field>
     </mat-expansion-panel>
 </div>
+}

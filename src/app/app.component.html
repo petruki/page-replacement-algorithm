@@ -49,7 +49,9 @@
   </section>
 
   <section id="resultPanel" class="section results" style="grid-area: result;">
-    <mat-error *ngIf="error">{{ error }}</mat-error>
+    @if (error) {
+    <mat-error>{{ error }}</mat-error>
+    }
     <div class="title">
       <h1 style="margin: auto;">Results</h1>
     </div>

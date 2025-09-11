@@ -1,11 +1,22 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { PageAlgorithm } from '../page-algorithm';
 
 @Component({
   selector: 'app-fifo',
   templateUrl: './fifo.component.html',
   styleUrls: ['../app.component.css'],
-  standalone: false
+  imports: [
+    CommonModule,
+    MatGridListModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatInputModule
+  ]
 })
 export class FifoComponent extends PageAlgorithm {
   fifoQueue: any[] = [];
