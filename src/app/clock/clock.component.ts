@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -20,8 +20,8 @@ import { PageAlgorithm } from '../page-algorithm';
 })
 export class ClockComponent extends PageAlgorithm {
 
-  constructor() {
-    super();
+  constructor(cdr: ChangeDetectorRef) {
+    super(cdr);
   }
 
   protected async exeuteAlgorithm(entry: string[], capacity: number) {
@@ -47,7 +47,7 @@ export class ClockComponent extends PageAlgorithm {
             this.addLog('- Page found, referencing the page');
             await this.delay(this.delayTime);
 
-            if (this.tiles[numEntries * cap + next].text.indexOf('*') < 0) {
+            if (!this.tiles[numEntries * cap + next].text.includes('*')) {
               this.addLog('-- Page does not have the bit (*)');
               this.tiles[numEntries * cap + next].text = this.tiles[numEntries * cap + next].text + "*";
             }
@@ -87,10 +87,11 @@ export class ClockComponent extends PageAlgorithm {
     let checked = false;
     for (let cap = 1; cap <= capacity; cap++) {
 
-      if (this.tiles[numEntries * cap + next].text.indexOf('*') < 0) {
+      if (!this.tiles[numEntries * cap + next].text.includes('*')) {
         this.addLog(`-- Replacing page ${this.tiles[numEntries * cap + next].text} with ${value}*`);
         checked = true;
         this.tiles[numEntries * cap + next].text = value + '*'; // replace
+        this.cdr.detectChanges();
         await this.removeBit(numEntries, capacity, next, cap);
         this.skipCursor(numEntries, cap, next); await this.delay(this.delayTime);
         break;
@@ -100,6 +101,7 @@ export class ClockComponent extends PageAlgorithm {
     if (!checked) {
       this.addLog(`-- Replacing page ${this.tiles[numEntries * 1 + next].text} with ${value}*`);
       this.tiles[numEntries * 1 + next].text = value + '*'; // replace
+      this.cdr.detectChanges();
       await this.removeBit(numEntries, capacity, next, 1);
       this.moveCursor(numEntries, 1, next); await this.delay(this.delayTime);
     }
@@ -111,7 +113,9 @@ export class ClockComponent extends PageAlgorithm {
     this.addLog(`--- Removing bit from the coming pages...`);
     if (cap + 1 < capacity) {
       for (let index = cap + 1; index <= capacity; index++) {
-        this.tiles[numEntries * index + next].text = this.tiles[numEntries * index + next].text.replace('*', ''); await this.delay(this.delayTime);
+        this.tiles[numEntries * index + next].text = this.tiles[numEntries * index + next].text.replace('*', ''); 
+        this.cdr.detectChanges();
+        await this.delay(this.delayTime);
       }
     }
   }
@@ -132,6 +136,7 @@ export class ClockComponent extends PageAlgorithm {
       }
     }
     this.tiles[numEntries * (cap + 1 <= this.capacity ? cap + 1 : 1) + next].border = this.READING;
+    this.cdr.detectChanges();
   }
 
   private moveCursor(numEntries: number, cap: number, next: number): void {
@@ -148,5 +153,6 @@ export class ClockComponent extends PageAlgorithm {
     if (noCursor) {
       this.tiles[numEntries * (cap + 1) + next].border = this.READING;
     }
+    this.cdr.detectChanges();
   }
 }

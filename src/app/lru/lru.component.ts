@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -21,8 +21,8 @@ import { PageAlgorithm } from '../page-algorithm';
 export class LruComponent extends PageAlgorithm {
   lruQueue: any[] = [];
 
-  constructor() {
-    super();
+  constructor(cdr: ChangeDetectorRef) {
+    super(cdr);
   }
 
   protected async exeuteAlgorithm(entry: string[], capacity: number): Promise<any> {
@@ -91,6 +91,7 @@ export class LruComponent extends PageAlgorithm {
         this.tiles[numEntries * cap + fault].text = value; // replace
         this.lruQueue.splice(0, 1); // Remove from queue
         this.lruQueue.push(value); // Add to queue
+        this.cdr.detectChanges();
 
         this.fulfillPageFault(numEntries, capacity, fault);
         break;

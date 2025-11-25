@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core';
 import { AppComponent } from './app.component';
 
 export interface Tile {
@@ -10,6 +11,8 @@ export interface Tile {
 }
 
 export abstract class PageAlgorithm {
+
+  protected readonly cdr: ChangeDetectorRef;
 
   // Frame status
   protected ALLOC_FRAME: string = 'lightblue';
@@ -30,6 +33,10 @@ export abstract class PageAlgorithm {
   protected delayTime: number = 500;
   private paused: boolean = false;
   private aborted: boolean = false;
+
+  constructor(cdr: ChangeDetectorRef) {
+    this.cdr = cdr;
+  }
 
   protected async loadBlocks(stream: string, capacity: string) {
     this.tiles = [];
@@ -72,17 +79,19 @@ export abstract class PageAlgorithm {
   }
 
   protected fulfillFrame(tile: Tile, value: string): void {
-    if (value.trim() != '')
-      tile.color = this.ALLOC_FRAME;
-    else
+    if (value.trim() === '')
       tile.color = this.NOT_ALLOC_FRAME;
+    else
+      tile.color = this.ALLOC_FRAME;
 
     tile.text = value;
+    this.cdr.detectChanges();
   }
 
   protected fulfillPageFault(numEntries: number, capacity: number, next: number): void {
     this.tiles[numEntries * (capacity + 1) + next].text = 'F';
     this.tiles[numEntries * (capacity + 1) + next].color = this.FAULT;
+    this.cdr.detectChanges();
   }
 
   protected cursor(tile: Tile): void {
@@ -90,6 +99,7 @@ export abstract class PageAlgorithm {
       tile.border = this.NOT_READING;
     else
       tile.border = this.READING;
+    this.cdr.detectChanges();
   }
 
   protected isEmpty(tile: Tile): boolean {
@@ -103,6 +113,7 @@ export abstract class PageAlgorithm {
       this.logHeader[this.elementIndex] += `\n${log}`;
       this.tiles[this.elementIndex].log = this.logHeader[this.elementIndex].trim();
     }
+    this.cdr.detectChanges();
   }
 
   protected async delay(ms: number) {

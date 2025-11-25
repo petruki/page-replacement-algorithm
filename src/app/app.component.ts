@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -50,6 +50,8 @@ export class AppComponent {
   algorithmNum: number;
   paused: boolean = false;
 
+  constructor(private readonly cdr: ChangeDetectorRef) {}
+
   private validate(stream: string, capacity: string, algorithm: any): void {
     if (!stream || stream.trim() === '') {
       throw new Error('Please, add a stream to execute the algorithm.');
@@ -87,16 +89,18 @@ export class AppComponent {
         this.clockComponent.execute(stream, capacity, speed, this);
       else if (this.algorithmNum === 4)
         this.optComponent.execute(stream, capacity, speed, this);
+      this.cdr.detectChanges();
     } catch (e) {
       this.error = e.message;
+      this.cdr.detectChanges();
     }
   }
 
   public onControl() {
-    if (!this.paused)
-      this.paused = true;
-    else
+    if (this.paused)
       this.paused = false;
+    else
+      this.paused = true;
 
     if (this.algorithmNum === 1)
       this.fifoComponent.toggle();

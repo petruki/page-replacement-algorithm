@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -22,8 +22,8 @@ export class OptComponent extends PageAlgorithm {
 
   oldest: any;
   
-  constructor() {
-    super();
+  constructor(cdr: ChangeDetectorRef) {
+    super(cdr);
   }
   
   protected async exeuteAlgorithm(entry: string[], capacity: number) {
@@ -66,12 +66,12 @@ export class OptComponent extends PageAlgorithm {
   }
 
   private async checkFault(next: number, fault: number, numEntries: number, capacity: number, value: string) {
-    if (next != fault) {
+    if (next === fault) {
+      fault = next;
+    } else {
       this.addLog('- Page fault, validating replacement...');
       await this.verifyFault(fault, next, numEntries, capacity, value);
       next++;
-      fault = next;
-    } else {
       fault = next;
     }
     return { next, fault };
@@ -84,6 +84,7 @@ export class OptComponent extends PageAlgorithm {
       if (this.tiles[numEntries * cap + fault].text === this.oldest) {
         this.addLog(`-- Replacing page ${this.oldest} with ${value}`);
         this.tiles[numEntries * cap + fault].text = value; // replace
+        this.cdr.detectChanges();
 
         this.fulfillPageFault(numEntries, capacity, fault);
         break;
@@ -102,15 +103,19 @@ export class OptComponent extends PageAlgorithm {
 
       pos = -1;
       for (let index = fault + 1; index < numEntries; index++) {
-        this.tiles[index].border = this.READING; await this.delay(this.delayTime);
+        this.tiles[index].border = this.READING; 
+        this.cdr.detectChanges();
+        await this.delay(this.delayTime);
         let headerValue = this.tiles[index].text;
 
         if (headerValue === valueRead) {
           pos = index;
           this.tiles[index].border = this.NOT_READING;
+          this.cdr.detectChanges();
           break;
         }
         this.tiles[index].border = this.NOT_READING;
+        this.cdr.detectChanges();
       }
 
       // Found first oldest - should exit
